@@ -5,6 +5,8 @@ A Bluesky bot to post [trending repositories](https://github.com/trending) from 
 - All Repositories
 - JavaScript and TypeScript - TODO
 
+https://bsky.app/profile/github-trending.bsky.social
+
 <a href="https://bsky.app/profile/github-trending.bsky.social"><img width="597" alt="github trending" src="https://github.com/kawamataryo/bsky-github-trending-bot/assets/11070996/e6830a5b-d364-4cdc-a4ca-17d561015d2c"></a>
 
 ## ✨ Features
