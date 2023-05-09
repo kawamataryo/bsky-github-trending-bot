@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./github_tending.db"
+}
+
+model repository {
+  id Int @id @default(autoincrement())
+  description String?
+  name String
+  url String
+  owner_id Int
+  trend_log trend_log[]
+
+  owner owner @relation(fields: [owner_id], references: [id])
+  @@unique([url])
+}
+
+model language {
+  id Int @id @default(autoincrement())
+  name String
+
+  trend_log trend_log[]
+  @@unique([name])
+}
+
+model owner {
+  id Int @id @default(autoincrement())
+  name String
+  twitter_account String?
+
+  repositories repository[]
+  @@unique([name])
+}
+
+model trend_log {
+  id String @id
+  repository_id Int
+  trend_type_id Int
+  star_count Int
+  fork_count Int
+  today_star_count Int
+  created_unix_time Int
+  language_id Int
+
+  language language @relation(fields: [language_id], references: [id])
+  repository repository @relation(fields: [repository_id], references: [id])
+  trend_type trend_type @relation(fields: [trend_type_id], references: [id])
+}
+
+model trend_type {
+  id Int @id @default(autoincrement())
+  name String
+
+  trend_logs trend_log[]
+  @@unique([name])
+}
