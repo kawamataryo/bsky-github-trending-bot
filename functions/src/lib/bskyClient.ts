@@ -3,7 +3,7 @@ import ogs from "open-graph-scraper";
 import sharp from "sharp";
 import * as functions from "firebase-functions";
 
-import { GHTrend } from "../types/types";
+import { GHTrend, OpenGraph } from "../types/types";
 
 const truncateText = (text: string, maxLength: number) => {
   return text.length > maxLength ? text.substr(0, maxLength) + "..." : text;
@@ -12,21 +12,16 @@ const truncateText = (text: string, maxLength: number) => {
 const createPostText = (trend: GHTrend): string => {
   const contentText = `
 📦 ${trend.repository}
+👤 ${trend.owner}
 ⭐ ${trend.starCount} (+${trend.todayStarCount})${
     trend.language ? `\n🗒 ${trend.language}` : ""
   }
+🍴 ${trend.forkCount}
 ${trend.description ? `\n${trend.description}` : ""}
 `.trim();
 
   // The url will be a 30-character shortened URL, so the content will be truncate to 105 characters.
   return truncateText(contentText, 260) + `\n${trend.url}`;
-};
-
-type OpenGraph = {
-  url: string;
-  type: string;
-  description: string;
-  title: string;
 };
 
 const getOgImageFromUrl = async (url: string): Promise<OpenGraph> => {

@@ -9,3 +9,10 @@ export type GHTrend = {
   ownersTwitterAccount: string;
   url: string;
 };
+
+type OpenGraph = {
+  url: string;
+  type: string;
+  description: string;
+  title: string;
+};
