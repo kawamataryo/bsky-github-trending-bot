@@ -50,7 +50,7 @@ ${trend.description ? `\n${trend.description}` : ""}
 `.trim();
 
   // The url will be a 30-character shortened URL, so the content will be truncate to 105 characters.
-  return truncateText(contentText, 260) + `\n${trend.url}`;
+  return truncateText(contentText, 230) + `\n${trend.url}`;
 };
 
 const getOgImageFromUrl = async (url: string): Promise<OpenGraph> => {
