@@ -15,4 +15,5 @@ type OpenGraph = {
   type: string;
   description: string;
   title: string;
+  uint8Array: Uint8Array;
 };
