@@ -15,7 +15,7 @@ export class BskyClient {
     password: string;
   }): Promise<BskyClient> {
     const client = new BskyClient();
-    client.agent.login({ identifier, password });
+    await client.agent.login({ identifier, password });
     return client;
   }
 
