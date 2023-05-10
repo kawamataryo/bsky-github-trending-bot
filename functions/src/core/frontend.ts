@@ -6,8 +6,8 @@ import {
 } from "../lib/firestore";
 import { isUpdateTime, shuffle } from "../lib/utils";
 import * as admin from "firebase-admin";
-import { postRepository } from "../lib/bskyClient";
 import { GHTrend } from "../types/types";
+import { postRepository } from "../lib/bskyService";
 
 const db = admin.firestore();
 const collectionRef = db.collection("v1").doc("trends").collection("frontend");

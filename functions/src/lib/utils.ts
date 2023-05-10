@@ -15,3 +15,7 @@ export const shuffle = <T>(array: T[]): T[] => {
   }
   return out;
 };
+
+export const truncateText = (text: string, maxLength: number) => {
+  return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+};
