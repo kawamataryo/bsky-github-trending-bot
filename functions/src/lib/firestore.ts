@@ -1,12 +1,13 @@
 import dayjs from "dayjs";
 import { GHTrend } from "../types/types";
 
-const getTrendDataWithinTwoWeek = async (
+const getExcludedInsertData = async (
   collectionRef: FirebaseFirestore.CollectionReference
 ): Promise<GHTrend[]> => {
-  const twoWeekAgo = dayjs().add(-14, "day").unix();
+  // exclude repositories submitted within 2 days.
+  const weekAgo = dayjs().add(-2, "day").unix();
   const querySnapshotFromOneWeekAgo = await collectionRef
-    .where("createdAt", ">=", twoWeekAgo)
+    .where("createdAt", ">=", weekAgo)
     .get();
   return querySnapshotFromOneWeekAgo.docs.map((doc) => doc.data() as GHTrend);
 };
@@ -15,12 +16,11 @@ export const bulkInsertTrends = async (
   collectionRef: FirebaseFirestore.CollectionReference,
   trends: GHTrend[]
 ): Promise<void> => {
-  const trendsFromOneWeekAgo = await getTrendDataWithinTwoWeek(collectionRef);
+  const excludeData = await getExcludedInsertData(collectionRef);
 
   await Promise.all(
     trends.map(async (trend) => {
-      // exclude repositories submitted within a week.
-      if (trendsFromOneWeekAgo.some((d) => d.url === trend.url)) {
+      if (excludeData.some((d) => d.url === trend.url)) {
         return Promise.resolve();
       }
       return await collectionRef.add({
@@ -35,6 +35,7 @@ export const bulkInsertTrends = async (
 export const getUntweetedTrend = async (
   collectionRef: FirebaseFirestore.CollectionReference
 ): Promise<FirebaseFirestore.QuerySnapshot> => {
+  // The target is items created within the last 2 days.
   const twoDaysBeforeTime = dayjs().add(-2, "day").unix();
 
   return await collectionRef
