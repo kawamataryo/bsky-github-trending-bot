@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
-import { tweetAllLanguagesTrends } from "../core/allLanguages";
+import { postAllLanguagesTrends } from "../core/allLanguages";
+import { postFrontendTrends } from "../core/frontend";
 
 const runtimeOpts = {
   timeoutSeconds: 180,
@@ -9,9 +10,9 @@ const runtimeOpts = {
 export const postTrend = functions
   .runWith(runtimeOpts)
   .pubsub.schedule("every 1 hours")
-  .onRun(async (_context) => {
+  .onRun(async () => {
     try {
-      await Promise.all([tweetAllLanguagesTrends()]);
+      await Promise.all([postAllLanguagesTrends(), postFrontendTrends()]);
     } catch (e) {
       console.error(e);
     }

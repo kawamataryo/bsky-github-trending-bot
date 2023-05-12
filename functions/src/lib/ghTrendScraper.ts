@@ -97,8 +97,3 @@ export class GHTrendScraper {
     };
   }
 }
-
-(async () => {
-  const trends = await GHTrendScraper.scraping();
-  console.log(trends);
-})();

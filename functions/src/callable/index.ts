@@ -1,8 +1,9 @@
 import * as functions from "firebase-functions";
 import {
-  tweetAllLanguagesTrends,
+  postAllLanguagesTrends,
   updateAllLanguagesTrends,
 } from "../core/allLanguages";
+import { postFrontendTrends, updateFrontendTrends } from "../core/frontend";
 
 const runtimeOpts = {
   timeoutSeconds: 180,
@@ -12,31 +13,51 @@ const runtimeOpts = {
 export const scrappingGitHubTrends = functions
   .runWith(runtimeOpts)
   .https.onRequest(async (_req, res) => {
+    let hasError = false;
+    const errorMessages: string[] = [];
+
     const errorHandler = (e: unknown, type: string) => {
-      console.error(`${type} tweet scrapping error`);
-      console.error(e);
+      const errorMessage = `${type} tweet scrapping error\n${e}`;
+      console.error(errorMessage);
+      hasError = true;
+      errorMessages.push(errorMessage);
     };
 
     // NOTE: Run in series to prevent stop in case of rejects
-    await updateAllLanguagesTrends().catch((e) =>
-      errorHandler(e, "All languages")
-    );
+    await Promise.all([
+      updateAllLanguagesTrends().catch((e) => errorHandler(e, "All languages")),
+      updateFrontendTrends().catch((e) => errorHandler(e, "Frontend")),
+    ]);
 
-    res.send("success");
+    if (!hasError) {
+      res.send("success");
+    } else {
+      res.status(500).send(errorMessages.join("\n"));
+    }
   });
 
-export const tweetGitHubTrends = functions
+export const postGitHubTrends = functions
   .runWith(runtimeOpts)
   .https.onRequest(async (_req, res) => {
+    let hasError = false;
+    const errorMessages: string[] = [];
+
     const errorHandler = (e: unknown, type: string) => {
-      console.error(`${type} tweet error`);
-      console.error(e);
+      const errorMessage = `${type} post error\n${e}`;
+      console.error(errorMessage);
+      hasError = true;
+      errorMessages.push(errorMessage);
     };
 
     // NOTE: Run in series to prevent stop in case of rejects
-    await tweetAllLanguagesTrends().catch((e) =>
-      errorHandler(e, "All languages")
-    );
+    await Promise.all([
+      postAllLanguagesTrends().catch((e) => errorHandler(e, "All languages")),
+      postFrontendTrends().catch((e) => errorHandler(e, "Frontend")),
+    ]);
 
-    res.send("success");
+    if (!hasError) {
+      res.send("success");
+    } else {
+      res.status(500).send(errorMessages.join("\n"));
+    }
   });

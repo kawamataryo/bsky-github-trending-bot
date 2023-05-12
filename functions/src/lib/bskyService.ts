@@ -1,13 +1,21 @@
 import { GHTrend } from "../types/types";
-import * as functions from "firebase-functions";
 import { truncateText } from "./utils";
 import { BskyClient } from "./bskyClient";
 import { getOgImageFromUrl } from "./getOgImageFromUrl";
 
-export const postRepository = async (trendData: GHTrend) => {
+export const postRepository = async (
+  trendData: GHTrend,
+  {
+    identifier,
+    password,
+  }: {
+    identifier: string;
+    password: string;
+  }
+) => {
   const agent = await BskyClient.createAgent({
-    identifier: functions.config().bsky.id,
-    password: functions.config().bsky.password,
+    identifier,
+    password,
   });
 
   const text = createPostText(trendData);

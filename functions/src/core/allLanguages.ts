@@ -8,6 +8,7 @@ import { isUpdateTime, shuffle } from "../lib/utils";
 import * as admin from "firebase-admin";
 import { GHTrend } from "../types/types";
 import { postRepository } from "../lib/bskyService";
+import * as functions from "firebase-functions";
 
 const db = admin.firestore();
 const collectionRef = db.collection("v1").doc("trends").collection("all");
@@ -17,7 +18,7 @@ export const updateAllLanguagesTrends = async (): Promise<void> => {
   await bulkInsertTrends(collectionRef, shuffle(trends));
 };
 
-export const tweetAllLanguagesTrends = async (): Promise<void> => {
+export const postAllLanguagesTrends = async (): Promise<void> => {
   // update trends data at several times a day.
   if (isUpdateTime()) {
     await updateAllLanguagesTrends();
@@ -30,6 +31,9 @@ export const tweetAllLanguagesTrends = async (): Promise<void> => {
   }
   const doc = snapshot.docs.at(0)!;
   const trendData = doc.data() as GHTrend;
-  await postRepository(trendData);
+  await postRepository(trendData, {
+    identifier: functions.config().bsky.id,
+    password: functions.config().bsky.password,
+  });
   await updateTweetedFlag(doc, true);
 };
