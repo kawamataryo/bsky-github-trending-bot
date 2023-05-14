@@ -36,8 +36,8 @@ export const postFrontendTrends = async (): Promise<void> => {
   const trendData = doc.data() as GHTrend;
 
   const agent = await BskyClient.createAgent({
-    identifier: functions.config().bsky.id,
-    password: functions.config().bsky.password,
+    identifier: functions.config().bsky.frontend_id,
+    password: functions.config().bsky.frontend_password,
   });
 
   await postRepository(trendData, agent);
