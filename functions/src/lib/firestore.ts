@@ -51,3 +51,24 @@ export const updateTweetedFlag = async (
 ): Promise<void> => {
   await document.ref.update({ tweeted });
 };
+
+export const insertOwner = async (
+  collectionRef: FirebaseFirestore.CollectionReference,
+  trend: GHTrend,
+  bskyHandle: string
+) => {
+  await collectionRef.doc(trend.owner).set({
+    name: trend.owner,
+    twitterId: trend.ownersTwitterAccount,
+    twitterProfileUrl: trend.ownersTwitterAccount.replace(
+      "@",
+      "https://twitter.com/"
+    ),
+    blueskyHandle: bskyHandle,
+    blueskyProfileUrl: bskyHandle
+      ? `https://staging.bsky.app/profile/${bskyHandle}`
+      : "",
+    createdAt: dayjs().unix(),
+    isChecked: false,
+  });
+};

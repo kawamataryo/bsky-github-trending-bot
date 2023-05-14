@@ -9,6 +9,7 @@ import * as admin from "firebase-admin";
 import { GHTrend } from "../types/types";
 import { postRepository } from "../lib/bskyService";
 import * as functions from "firebase-functions";
+import { BskyClient } from "../lib/bskyClient";
 
 const db = admin.firestore();
 const collectionRef = db.collection("v1").doc("trends").collection("frontend");
@@ -33,9 +34,12 @@ export const postFrontendTrends = async (): Promise<void> => {
   }
   const doc = snapshot.docs.at(0)!;
   const trendData = doc.data() as GHTrend;
-  await postRepository(trendData, {
-    identifier: functions.config().bsky.frontend_id,
-    password: functions.config().bsky.frontend_password,
+
+  const agent = await BskyClient.createAgent({
+    identifier: functions.config().bsky.id,
+    password: functions.config().bsky.password,
   });
+
+  await postRepository(trendData, agent);
   await updateTweetedFlag(doc, true);
 };

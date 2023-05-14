@@ -1,4 +1,4 @@
-import { AppBskyFeedPost, BskyAgent, RichText } from "@atproto/api";
+import { AppBskyFeedPost, AppBskyRichtextFacet, BskyAgent } from "@atproto/api";
 
 export class BskyClient {
   private service = "https://bsky.social";
@@ -21,18 +21,17 @@ export class BskyClient {
 
   public async post({
     text,
+    facets,
     embed,
   }: {
     text: string;
+    facets?: AppBskyRichtextFacet.Main[];
     embed?: AppBskyFeedPost.Record["embed"];
   }): Promise<void> {
-    const rt = new RichText({ text });
-    await rt.detectFacets(this.agent);
-
     const postParams: AppBskyFeedPost.Record = {
       $type: "app.bsky.feed.post",
-      text: rt.text,
-      facets: rt.facets,
+      text,
+      facets,
       createdAt: new Date().toISOString(),
     };
     if (embed) {
@@ -56,5 +55,23 @@ export class BskyClient {
       mimeType: response.data.blob.mimeType,
       size: response.data.blob.size,
     };
+  };
+
+  public searchUser = async ({
+    term,
+    limit,
+  }: {
+    term: string;
+    limit: number;
+  }) => {
+    const result = await this.agent.searchActors({
+      term,
+      limit,
+    });
+    if (result.data.actors.length === 0) {
+      return null;
+    } else {
+      return result.data.actors[0];
+    }
   };
 }
