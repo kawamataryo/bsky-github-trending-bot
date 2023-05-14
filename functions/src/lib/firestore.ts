@@ -4,8 +4,8 @@ import { GHTrend } from "../types/types";
 const getExcludedInsertData = async (
   collectionRef: FirebaseFirestore.CollectionReference
 ): Promise<GHTrend[]> => {
-  // exclude repositories submitted within 2 days.
-  const weekAgo = dayjs().add(-2, "day").unix();
+  // exclude repositories submitted within 4 days.
+  const weekAgo = dayjs().add(-4, "day").unix();
   const querySnapshotFromOneWeekAgo = await collectionRef
     .where("createdAt", ">=", weekAgo)
     .get();
