@@ -1,13 +1,15 @@
 import { BskyClient } from "../functions/src/lib/bskyClient"
+import { convertLinkText } from "../functions/src/lib/bskyService";
 import { getOgImageFromUrl } from "../functions/src/lib/getOgImageFromUrl";
 import yargs from "yargs";
 
-const postWithLinkCard = async (text: string, url: string) => {
+const postWithLinkCard = async (_text: string, url: string) => {
   const agent = await BskyClient.createAgent({
     identifier: process.env.BLUESKY_IDENTIFIER!,
     password: process.env.BLUESKY_PASSWORD!,
   })
 
+  const { text, facets } = convertLinkText(_text);
   const og = await getOgImageFromUrl(url);
   const uploadedImage = await agent.uploadImage({
     image: og.uint8Array,
@@ -16,6 +18,7 @@ const postWithLinkCard = async (text: string, url: string) => {
 
   await agent.post({
     text,
+    facets,
     embed: {
       $type: "app.bsky.embed.external",
       external: {

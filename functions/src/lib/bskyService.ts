@@ -33,7 +33,7 @@ export const postRepository = async (trendData: GHTrend, agent: BskyClient) => {
   });
 };
 
-const createPostText = (trend: GHTrend): string => {
+export const createPostText = (trend: GHTrend): string => {
   const contentText = `
 📦 [${trend.owner}](https://github.com/${trend.owner}) / [${
     trend.repository
@@ -49,7 +49,7 @@ ${trend.description ? `\n${trend.description}` : ""}
 };
 
 // ref https://zenn.dev/kawarimidoll/articles/42efe3f1e59c13
-const convertLinkText = (src: string) => {
+export const convertLinkText = (src: string) => {
   const mdLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
   const facets = [];
 
