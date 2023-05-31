@@ -46,7 +46,7 @@ const getStarIncreaseLabel = (starCount: number): string => {
   } else {
     return labels.at(-1)!.label;
   }
-}
+};
 
 export const createPostText = (trend: GHTrend): string => {
   const contentText = `
