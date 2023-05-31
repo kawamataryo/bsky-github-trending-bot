@@ -33,8 +33,25 @@ export const postRepository = async (trendData: GHTrend, agent: BskyClient) => {
   });
 };
 
+const getStarIncreaseLabel = (starCount: number): string => {
+  const STAR_INCREASE_LABELS = [
+    { threshold: 100, label: "🔥 Hot Repo！(100+ new stars today) 🔥" },
+    { threshold: 200, label: "🚀 Skyrocketing！(200+ new stars today) 🚀" },
+    { threshold: 500, label: "🎉 Celebrating！(500+ new stars today) 🎉" },
+    { threshold: 1000, label: "💎 Hidden Gem！(1000+ new stars today) 💎" },
+  ];
+  const labels = STAR_INCREASE_LABELS.filter((l) => l.threshold <= starCount);
+  if (labels.length === 0) {
+    return "";
+  } else {
+    return labels.at(-1)!.label;
+  }
+}
+
 export const createPostText = (trend: GHTrend): string => {
   const contentText = `
+${getStarIncreaseLabel(Number(trend.todayStarCount))}
+
 📦 [${trend.owner}](https://github.com/${trend.owner}) / [${
     trend.repository
   }](https://github.com/${trend.owner}/${trend.repository})

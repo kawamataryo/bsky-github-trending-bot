@@ -39,22 +39,24 @@ const postWithLinkCard = async (_text: string, url: string) => {
 }
 
 (async () => {
-  const args = yargs.options({
-    text: {
-      type: "string",
-      demandOption: true,
-      describe: "Text to post",
-      require: true,
-      alias: "t",
-    },
-    url: {
-      type: "string",
-      demandOption: true,
-      describe: "URL to post",
-      require: true,
-      alias: "u",
-    }
-  }).parseSync()
+  // const args = yargs.options({
+  //   text: {
+  //     type: "string",
+  //     demandOption: true,
+  //     describe: "Text to post",
+  //     require: true,
+  //     alias: "t",
+  //   },
+  //   url: {
+  //     type: "string",
+  //     demandOption: true,
+  //     describe: "URL to post",
+  //     require: true,
+  //     alias: "u",
+  //   }
+  // }).parseSync()
 
-  await postWithLinkCard(args.text, args.url)
+  // await postWithLinkCard(args.text, args.url)
+
+  await postWithLinkCard("I created a pull request for the ATProtocol guide to add Sky Follower Bride to the list of community projects.", "https://github.com/bluesky-social/atproto-website/pull/95")
 })()
