@@ -12,7 +12,7 @@ export const postRepository = async (trendData: GHTrend, agent: BskyClient) => {
   });
 
   await agent.post({
-    text,
+    text: truncateText(text, 290),
     facets,
     embed: {
       $type: "app.bsky.embed.external",
@@ -33,12 +33,12 @@ export const postRepository = async (trendData: GHTrend, agent: BskyClient) => {
   });
 };
 
-const getStarIncreaseLabel = (starCount: number): string => {
+export const getStarIncreaseLabel = (starCount: number): string => {
   const STAR_INCREASE_LABELS = [
-    { threshold: 100, label: "🔥 Hot Repo！(100+ new stars today) 🔥" },
-    { threshold: 200, label: "🚀 Skyrocketing！(200+ new stars today) 🚀" },
-    { threshold: 500, label: "🎉 Celebrating！(500+ new stars today) 🎉" },
-    { threshold: 1000, label: "💎 Hidden Gem！(1000+ new stars today) 💎" },
+    { threshold: 100, label: "🔥 Hot Repo！ 🔥 (100+ new stars)" },
+    { threshold: 200, label: "🚀 Skyrocketing！ 🚀 (200+ new stars)" },
+    { threshold: 500, label: "🎉 Celebrating！ 🎉 (500+ new stars)" },
+    { threshold: 1000, label: "💎 Hidden Gem！ 💎 (1000+ new stars)" },
   ];
   const labels = STAR_INCREASE_LABELS.filter((l) => l.threshold <= starCount);
   if (labels.length === 0) {
@@ -49,20 +49,17 @@ const getStarIncreaseLabel = (starCount: number): string => {
 };
 
 export const createPostText = (trend: GHTrend): string => {
-  const contentText = `
-${getStarIncreaseLabel(Number(trend.todayStarCount))}
+  return `
+${getStarIncreaseLabel(trend.todayStarCount)}
 
 📦 [${trend.owner}](https://github.com/${trend.owner}) / [${
     trend.repository
   }](https://github.com/${trend.owner}/${trend.repository})
-⭐ ${trend.starCount} (+${trend.todayStarCount})${
+⭐ ${trend.starCount.toLocaleString()} (+${trend.todayStarCount.toLocaleString()})${
     trend.language ? `\n🗒 ${trend.language}` : ""
   }
 ${trend.description ? `\n${trend.description}` : ""}
 `.trim();
-
-  // The url will be a 30-character shortened URL, so the content will be truncate to 105 characters.
-  return truncateText(contentText, 230);
 };
 
 // ref https://zenn.dev/kawarimidoll/articles/42efe3f1e59c13

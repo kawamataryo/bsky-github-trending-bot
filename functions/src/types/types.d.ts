@@ -3,9 +3,9 @@ export type GHTrend = {
   repository: string;
   language: string;
   description: string;
-  starCount: string;
-  forkCount: string;
-  todayStarCount: string;
+  starCount: number;
+  forkCount: number;
+  todayStarCount: number;
   ownersTwitterAccount: string;
   url: string;
 };

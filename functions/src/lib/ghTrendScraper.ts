@@ -23,9 +23,9 @@ export class GHTrendScraper {
           repository,
           language: language ?? "",
           description: description ?? "",
-          starCount: starCount ?? "",
-          forkCount: forkCount ?? "",
-          todayStarCount: todayStarCount ?? "",
+          starCount,
+          forkCount,
+          todayStarCount,
           ownersTwitterAccount: ownersTwitterAccount ?? "",
           url: `https://github.com/${owner}/${repository}`,
         };
@@ -70,21 +70,21 @@ export class GHTrendScraper {
       .querySelector("a[href$=\"stargazers\"]")
       ?.innerText.trim();
     return {
-      starCount,
+      starCount: starCount ? this.strToNumber(starCount) : 0,
     };
   }
 
   private static getForkCount(dom: HTMLElement) {
     const forkCount = dom.querySelector("a[href*=\"forks\"]")?.innerText.trim();
     return {
-      forkCount,
+      forkCount: forkCount ? this.strToNumber(forkCount) : 0,
     };
   }
 
   private static getTodayStarCount(dom: HTMLElement) {
     const text = dom.querySelector("span.float-sm-right")?.innerText.trim();
     return {
-      todayStarCount: text?.split(/\s/)[0],
+      todayStarCount: text ? this.strToNumber(text?.split(/\s/)[0]) : 0,
     };
   }
 
@@ -95,5 +95,9 @@ export class GHTrendScraper {
     return {
       language,
     };
+  }
+
+  private static strToNumber(str: string) {
+    return Number(str.replace(/,/g, ""));
   }
 }
