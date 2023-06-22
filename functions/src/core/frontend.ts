@@ -17,7 +17,11 @@ const collectionRef = db.collection("v1").doc("trends").collection("frontend");
 export const updateFrontendTrends = async (): Promise<void> => {
   const jsTrends = await GHTrendScraper.scraping("/javascript");
   const tsTrends = await GHTrendScraper.scraping("/typescript");
-  await bulkInsertTrends(collectionRef, shuffle([...jsTrends, ...tsTrends]));
+  // filter today's star count > 50
+  const trends = shuffle([...jsTrends, ...tsTrends]).filter(
+    (t) => t.todayStarCount > 50
+  );
+  await bulkInsertTrends(collectionRef, shuffle(trends));
 };
 
 export const postFrontendTrends = async (): Promise<void> => {
