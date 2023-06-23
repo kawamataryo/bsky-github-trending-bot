@@ -3,7 +3,7 @@
 A Bluesky bot to post [trending repositories](https://github.com/trending) from GitHub. No official GitHub Product.
 
 - All Repositories
-- JavaScript and TypeScript - TODO
+- JavaScript and TypeScript
 
 https://bsky.app/profile/github-trending.bsky.social
 
