@@ -21,7 +21,7 @@ export const updateFrontendTrends = async (): Promise<void> => {
   const trends = shuffle([...jsTrends, ...tsTrends]).filter(
     (t) => t.todayStarCount > 50
   );
-  await bulkInsertTrends(collectionRef, shuffle(trends));
+  await bulkInsertTrends(collectionRef, trends);
 };
 
 export const postFrontendTrends = async (): Promise<void> => {
