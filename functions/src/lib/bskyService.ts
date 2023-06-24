@@ -2,6 +2,7 @@ import { GHTrend } from "../types/types";
 import { truncateText } from "./utils";
 import { BskyClient } from "./bskyClient";
 import { getOgImageFromUrl } from "./getOgImageFromUrl";
+import { ComAtprotoRepoStrongRef } from "@atproto/api";
 
 export const postRepository = async (trendData: GHTrend, agent: BskyClient) => {
   const { text, facets } = convertLinkText(createPostText(trendData));
@@ -11,7 +12,7 @@ export const postRepository = async (trendData: GHTrend, agent: BskyClient) => {
     encoding: "image/jpeg",
   });
 
-  await agent.post({
+  return await agent.post({
     text: truncateText(text, 290),
     facets,
     embed: {
@@ -84,4 +85,47 @@ export const convertLinkText = (src: string) => {
     });
   }
   return { text: src, facets };
+};
+
+export const splitStringForThreadText = (text: string, limit: number) => {
+  const words = text.split(" ");
+  const chunks = [];
+  let currentChunk = "";
+
+  words.forEach((word) => {
+    if ((currentChunk + word).length <= limit - 5) {
+      currentChunk += word + " ";
+    } else {
+      chunks.push(currentChunk.trim());
+      currentChunk = word + " ";
+    }
+  });
+
+  if (currentChunk) {
+    chunks.push(currentChunk.trim());
+  }
+
+  const total = chunks.length;
+  if (total === 1) return chunks;
+  return chunks.map((chunk, index) => `${chunk} (${index + 1}/${total})`);
+};
+
+export const replyToPostPerText = async (
+  text: string,
+  rootPostRef: ComAtprotoRepoStrongRef.Main,
+  agent: BskyClient
+) => {
+  const treadTexts = splitStringForThreadText(`📝 Summary: \n\n${text}`, 300);
+  let targetPostRef = rootPostRef;
+
+  for (const text of treadTexts) {
+    const result = await agent.post({
+      text,
+      reply: {
+        root: rootPostRef,
+        parent: targetPostRef,
+      },
+    });
+    targetPostRef = result;
+  }
 };

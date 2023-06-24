@@ -1,4 +1,5 @@
 import { AppBskyFeedPost, AppBskyRichtextFacet, BskyAgent } from "@atproto/api";
+import { ReplyRef } from "@atproto/api/dist/client/types/app/bsky/feed/post";
 
 export class BskyClient {
   private service = "https://bsky.social";
@@ -23,11 +24,13 @@ export class BskyClient {
     text,
     facets,
     embed,
+    reply,
   }: {
     text: string;
     facets?: AppBskyRichtextFacet.Main[];
     embed?: AppBskyFeedPost.Record["embed"];
-  }): Promise<void> {
+    reply?: ReplyRef;
+  }): Promise<{ cid: string; uri: string }> {
     const postParams: AppBskyFeedPost.Record = {
       $type: "app.bsky.feed.post",
       text,
@@ -37,7 +40,10 @@ export class BskyClient {
     if (embed) {
       postParams.embed = embed;
     }
-    await this.agent.post(postParams);
+    if (reply) {
+      postParams.reply = reply;
+    }
+    return await this.agent.post(postParams);
   }
 
   public uploadImage = async ({

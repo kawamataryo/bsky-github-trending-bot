@@ -17,11 +17,15 @@
   "main": "lib/index.js",
   "dependencies": {
     "@atproto/api": "^0.2.11",
+    "cheerio": "^1.0.0-rc.12",
     "dayjs": "^1.11.7",
     "firebase-admin": "^11.8.0",
     "firebase-functions": "^4.4.0",
+    "langchain": "^0.0.96",
+    "node-fetch": "^3.3.1",
     "node-html-parser": "^6.1.5",
     "open-graph-scraper": "^6.0.1",
+    "puppeteer": "^19.11.1",
     "sharp": "^0.32.1",
     "twitter-api-v2": "^1.14.2"
   },

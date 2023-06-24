@@ -13,6 +13,7 @@ https://bsky.app/profile/github-trending.bsky.social
 
 - Crawl [GitHub Trending](https://github.com/trending) daily to get repository information.
 - Post trending repository every 1 hours.
+- post summary of repository description.
 - Exclude repositories that were tweeted within two week.
 
 ## 📃 License

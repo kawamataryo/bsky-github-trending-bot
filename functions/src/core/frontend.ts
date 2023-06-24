@@ -7,9 +7,10 @@ import {
 import { isUpdateTime, shuffle } from "../lib/utils";
 import * as admin from "firebase-admin";
 import { GHTrend } from "../types/types";
-import { postRepository } from "../lib/bskyService";
+import { postRepository, replyToPostPerText } from "../lib/bskyService";
 import * as functions from "firebase-functions";
 import { BskyClient } from "../lib/bskyClient";
+import { OpenAIClient } from "../lib/openAIClient";
 
 const db = admin.firestore();
 const collectionRef = db.collection("v1").doc("trends").collection("frontend");
@@ -44,6 +45,17 @@ export const postFrontendTrends = async (): Promise<void> => {
     password: functions.config().bsky.frontend_password,
   });
 
-  await postRepository(trendData, agent);
+  const result = await postRepository(trendData, agent);
   await updateTweetedFlag(doc, true);
+
+  // post summary if today's star count > 100
+  if (trendData.todayStarCount > 100) {
+    try {
+      const openAIClient = new OpenAIClient(functions.config().openai.api_key);
+      const summary = await openAIClient.summarize(trendData.url);
+      await replyToPostPerText(summary, result, agent);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 };

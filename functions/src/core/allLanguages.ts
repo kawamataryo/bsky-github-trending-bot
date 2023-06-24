@@ -8,10 +8,11 @@ import {
 import { isUpdateTime, shuffle } from "../lib/utils";
 import * as admin from "firebase-admin";
 import { GHTrend } from "../types/types";
-import { postRepository } from "../lib/bskyService";
+import { postRepository, replyToPostPerText } from "../lib/bskyService";
 import * as functions from "firebase-functions";
 import { BskyClient } from "../lib/bskyClient";
 import { ProfileView } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
+import { OpenAIClient } from "../lib/openAIClient";
 
 const db = admin.firestore();
 const trendCollectionRef = db.collection("v1").doc("trends").collection("all");
@@ -59,6 +60,15 @@ export const postAllLanguagesTrends = async (): Promise<void> => {
   const doc = snapshot.docs.at(0)!;
   const trendData = doc.data() as GHTrend;
 
-  await postRepository(trendData, agent);
+  const result = await postRepository(trendData, agent);
   await updateTweetedFlag(doc, true);
+  if (trendData.todayStarCount > 100) {
+    try {
+      const openAIClient = new OpenAIClient(functions.config().openai.api_key);
+      const summary = await openAIClient.summarize(trendData.url);
+      await replyToPostPerText(summary, result, agent);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 };
