@@ -20,7 +20,7 @@ export const updateFrontendTrends = async (): Promise<void> => {
   const tsTrends = await GHTrendScraper.scraping("/typescript");
   // filter today's star count > 50
   const trends = shuffle([...jsTrends, ...tsTrends]).filter(
-    (t) => t.todayStarCount > 50
+    (t) => t.todayStarCount > 30
   );
   await bulkInsertTrends(collectionRef, trends);
 };
@@ -49,10 +49,14 @@ export const postFrontendTrends = async (): Promise<void> => {
   await updateTweetedFlag(doc, true);
 
   // post summary if today's star count > 100
+  console.log(
+    "🚀 ~ file: frontend.ts:53 ~ postFrontendTrends ~ trendData.todayStarCount:",
+    trendData.todayStarCount
+  );
   if (trendData.todayStarCount > 100) {
     try {
       const openAIClient = new OpenAIClient(functions.config().openai.api_key);
-      const summary = await openAIClient.summarize(trendData.url);
+      const summary = await openAIClient.summarize(trendData);
       await replyToPostPerText(summary, result, agent);
     } catch (e) {
       console.error(e);

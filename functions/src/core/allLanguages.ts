@@ -62,10 +62,18 @@ export const postAllLanguagesTrends = async (): Promise<void> => {
 
   const result = await postRepository(trendData, agent);
   await updateTweetedFlag(doc, true);
+  console.log(
+    "🚀 ~ file: frontend.ts:53 ~ postFrontendTrends ~ trendData.todayStarCount:",
+    trendData.todayStarCount
+  );
   if (trendData.todayStarCount > 100) {
     try {
       const openAIClient = new OpenAIClient(functions.config().openai.api_key);
-      const summary = await openAIClient.summarize(trendData.url);
+      const summary = await openAIClient.summarize(trendData);
+      console.log(
+        "🚀 ~ file: allLanguages.ts:69 ~ postAllLanguagesTrends ~ summary:",
+        summary
+      );
       await replyToPostPerText(summary, result, agent);
     } catch (e) {
       console.error(e);

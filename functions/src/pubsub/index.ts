@@ -3,7 +3,7 @@ import { postAllLanguagesTrends } from "../core/allLanguages";
 import { postFrontendTrends } from "../core/frontend";
 
 const runtimeOpts = {
-  timeoutSeconds: 180,
+  timeoutSeconds: 360,
   memory: "512MB" as const,
 };
 

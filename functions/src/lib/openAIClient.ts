@@ -1,6 +1,9 @@
 import { OpenAI } from "langchain/llms/openai";
 import { loadSummarizationChain } from "langchain/chains";
-import { CheerioWebBaseLoader } from "langchain/document_loaders/web/cheerio";
+import {
+  RecursiveCharacterTextSplitter,
+} from "langchain/text_splitter";
+import { GHTrend } from "../types/types";
 
 export class OpenAIClient {
   private model: OpenAI;
@@ -17,17 +20,19 @@ export class OpenAIClient {
     return await this.model.call(prompt);
   }
 
-  async summarize(url: string): Promise<string> {
+  async summarize(trend: GHTrend): Promise<string> {
     const summarizationChain = loadSummarizationChain(this.model, {
       type: "map_reduce",
     });
-    const docs = await this.getWebpageTextDocs(url);
+    const docs = await this.getWebpageTextDocs({
+      owner: trend.owner,
+      repository: trend.repository,
+    });
 
     try {
       const res = await summarizationChain.call({
         input_documents: docs,
       });
-      console.info("🚀 ~ summarize result", res.text);
       return res.text;
     } catch (e) {
       console.error(e);
@@ -35,10 +40,17 @@ export class OpenAIClient {
     }
   }
 
-  private async getWebpageTextDocs(url: string) {
-    const loader = new CheerioWebBaseLoader(url, {
-      selector: "#readme",
+  async getWebpageTextDocs({ owner, repository }: Pick<GHTrend, "owner" | "repository">) {
+    const readmeBuffer = (
+      await (
+        await fetch(`https://api.github.com/repos/${owner}/${repository}/readme`)
+      ).json()
+    ).content;
+    const readme = Buffer.from(readmeBuffer, "base64").toString("utf-8");
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: 2000,
     });
-    return await loader.loadAndSplit();
+    const docs = await splitter.createDocuments([readme]);
+    return docs;
   }
 }
