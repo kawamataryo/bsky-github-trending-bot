@@ -1,8 +1,6 @@
 import { OpenAI } from "langchain/llms/openai";
 import { loadSummarizationChain } from "langchain/chains";
-import {
-  RecursiveCharacterTextSplitter,
-} from "langchain/text_splitter";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { GHTrend } from "../types/types";
 
 export class OpenAIClient {
@@ -40,10 +38,15 @@ export class OpenAIClient {
     }
   }
 
-  async getWebpageTextDocs({ owner, repository }: Pick<GHTrend, "owner" | "repository">) {
+  async getWebpageTextDocs({
+    owner,
+    repository,
+  }: Pick<GHTrend, "owner" | "repository">) {
     const readmeBuffer = (
       await (
-        await fetch(`https://api.github.com/repos/${owner}/${repository}/readme`)
+        await fetch(
+          `https://api.github.com/repos/${owner}/${repository}/readme`
+        )
       ).json()
     ).content;
     const readme = Buffer.from(readmeBuffer, "base64").toString("utf-8");

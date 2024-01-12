@@ -14,13 +14,13 @@
   "engines": {
     "node": "18"
   },
-  "main": "lib/index.js",
+  "main": "lib/src/index.js",
   "dependencies": {
     "@atproto/api": "^0.2.11",
     "cheerio": "^1.0.0-rc.12",
     "dayjs": "^1.11.7",
     "firebase-admin": "^11.8.0",
-    "firebase-functions": "^4.4.0",
+    "firebase-functions": "^4.6.0",
     "langchain": "^0.0.96",
     "node-fetch": "^3.3.1",
     "node-html-parser": "^6.1.5",
