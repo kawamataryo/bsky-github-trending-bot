@@ -23,6 +23,7 @@
   "homepage": "https://github.com/kawamataryo/github_trending_bot#readme",
   "dependencies": {
     "@atproto/api": "^0.3.0",
+    "@langchain/openai": "^0.0.28",
     "@prisma/client": "^3.15.2",
     "dotenv": "^10.0.0",
     "firebase": "^9.22.2",

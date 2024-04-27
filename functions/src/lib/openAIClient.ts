@@ -1,4 +1,4 @@
-import { OpenAI } from "langchain/llms/openai";
+import { OpenAI } from "@langchain/openai";
 import { loadSummarizationChain } from "langchain/chains";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { GHTrend } from "../types/types";
@@ -28,7 +28,7 @@ export class OpenAIClient {
     });
 
     try {
-      const res = await summarizationChain.call({
+      const res = await summarizationChain.invoke({
         input_documents: docs,
       });
       return res.text;

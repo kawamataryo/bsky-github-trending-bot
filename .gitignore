@@ -119,3 +119,4 @@ dist
 .runtimeconfig.json
 service-account.json
 .DS_Store
+.envrc
