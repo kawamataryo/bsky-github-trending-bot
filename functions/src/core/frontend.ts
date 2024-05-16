@@ -48,12 +48,12 @@ export const postFrontendTrends = async (): Promise<void> => {
   const result = await postRepository(trendData, agent);
   await updateTweetedFlag(doc, true);
 
-  // post summary if today's star count > 100
+  // post summary if today's star count > 200
   console.log(
     "🚀 ~ file: frontend.ts:53 ~ postFrontendTrends ~ trendData.todayStarCount:",
     trendData.todayStarCount
   );
-  if (trendData.todayStarCount > 100) {
+  if (trendData.todayStarCount > 500) {
     try {
       const openAIClient = new OpenAIClient(functions.config().openai.api_key);
       const summary = await openAIClient.summarize(trendData);
