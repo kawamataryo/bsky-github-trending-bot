@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { GHTrend } from "../types/types";
 
 const getExcludedInsertData = async (
-  collectionRef: FirebaseFirestore.CollectionReference
+  collectionRef: FirebaseFirestore.CollectionReference,
 ): Promise<GHTrend[]> => {
   // exclude repositories submitted within 4 days.
   const weekAgo = dayjs().add(-4, "day").unix();
@@ -14,7 +14,7 @@ const getExcludedInsertData = async (
 
 export const bulkInsertTrends = async (
   collectionRef: FirebaseFirestore.CollectionReference,
-  trends: GHTrend[]
+  trends: GHTrend[],
 ): Promise<void> => {
   const excludeData = await getExcludedInsertData(collectionRef);
 
@@ -28,12 +28,12 @@ export const bulkInsertTrends = async (
         createdAt: dayjs().unix(),
         tweeted: false,
       });
-    })
+    }),
   );
 };
 
 export const getUntweetedTrend = async (
-  collectionRef: FirebaseFirestore.CollectionReference
+  collectionRef: FirebaseFirestore.CollectionReference,
 ): Promise<FirebaseFirestore.QuerySnapshot> => {
   // The target is items created within the last 2 days.
   const twoDaysBeforeTime = dayjs().add(-2, "day").unix();
@@ -47,7 +47,7 @@ export const getUntweetedTrend = async (
 
 export const updateTweetedFlag = async (
   document: FirebaseFirestore.QueryDocumentSnapshot,
-  tweeted: boolean
+  tweeted: boolean,
 ): Promise<void> => {
   await document.ref.update({ tweeted });
 };
@@ -55,14 +55,14 @@ export const updateTweetedFlag = async (
 export const insertOwner = async (
   collectionRef: FirebaseFirestore.CollectionReference,
   trend: GHTrend,
-  bskyHandle: string
+  bskyHandle: string,
 ) => {
   await collectionRef.doc(trend.owner).set({
     name: trend.owner,
     twitterId: trend.ownersTwitterAccount,
     twitterProfileUrl: trend.ownersTwitterAccount.replace(
       "@",
-      "https://twitter.com/"
+      "https://twitter.com/",
     ),
     blueskyHandle: bskyHandle,
     blueskyProfileUrl: bskyHandle

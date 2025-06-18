@@ -20,7 +20,7 @@ export const updateFrontendTrends = async (): Promise<void> => {
   const tsTrends = await GHTrendScraper.scraping("/typescript");
   // filter today's star count > 50
   const trends = shuffle([...jsTrends, ...tsTrends]).filter(
-    (t) => t.todayStarCount > 30
+    (t) => t.todayStarCount > 30,
   );
   await bulkInsertTrends(collectionRef, trends);
 };
@@ -51,7 +51,7 @@ export const postFrontendTrends = async (): Promise<void> => {
   // post summary if today's star count > 200
   console.log(
     "🚀 ~ file: frontend.ts:53 ~ postFrontendTrends ~ trendData.todayStarCount:",
-    trendData.todayStarCount
+    trendData.todayStarCount,
   );
   if (trendData.todayStarCount > 500) {
     try {

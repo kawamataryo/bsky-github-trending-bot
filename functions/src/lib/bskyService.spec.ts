@@ -22,7 +22,7 @@ describe("splitStringForThreadText", () => {
   it("should return text group", () => {
     const result = splitStringForThreadText(
       "RxDB is an offline-first, reactive NoSQL database for JavaScript applications that can be used in various environments such as websites, hybrid apps, Electron apps, Progressive Web Apps, and Node.js. It provides a protocol for real-time replication with existing infrastructure and has a flexible storage layer that can be swapped out for different storage engines. RxDB supports multi-tab/window usage and implements the Event-Reduce algorithm for performance optimization. It also supports encryption, import/export, and key compression. RxDB can be used with various JavaScript runtimes such as Browsers, Node.js, Electron, React Native, Cordova/Phonegap, Capacitor, NativeScript, and Flutter.",
-      300
+      300,
     );
     expect(result).toEqual([
       "RxDB is an offline-first, reactive NoSQL database for JavaScript applications that can be used in various environments such as websites, hybrid apps, Electron apps, Progressive Web Apps, and Node.js. It provides a protocol for real-time replication with existing infrastructure and has a (1/3)",

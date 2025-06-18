@@ -75,7 +75,7 @@ export const convertLinkText = (src: string) => {
     src = src.replace(matched, anchor);
 
     const byteStart = new TextEncoder().encode(
-      src.substring(0, links.index)
+      src.substring(0, links.index),
     ).byteLength;
     const byteEnd = byteStart + new TextEncoder().encode(anchor).byteLength;
 
@@ -113,7 +113,7 @@ export const splitStringForThreadText = (text: string, limit: number) => {
 export const replyToPostPerText = async (
   text: string,
   rootPostRef: ComAtprotoRepoStrongRef.Main,
-  agent: BskyClient
+  agent: BskyClient,
 ) => {
   const treadTexts = splitStringForThreadText(`📝 Summary: \n\n${text}`, 300);
   let targetPostRef = rootPostRef;

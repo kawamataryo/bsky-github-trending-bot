@@ -10,7 +10,7 @@ export class OpenAIClient {
     this.model = new OpenAI({
       openAIApiKey,
       temperature: 0,
-      modelName: "gpt-4o-mini",
+      modelName: "gpt-4.1-nano",
     });
   }
 
@@ -45,7 +45,7 @@ export class OpenAIClient {
     const readmeBuffer = (
       await (
         await fetch(
-          `https://api.github.com/repos/${owner}/${repository}/readme`
+          `https://api.github.com/repos/${owner}/${repository}/readme`,
         )
       ).json()
     ).content;

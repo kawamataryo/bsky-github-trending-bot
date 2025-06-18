@@ -29,7 +29,7 @@ export class GHTrendScraper {
           ownersTwitterAccount: ownersTwitterAccount ?? "",
           url: `https://github.com/${owner}/${repository}`,
         };
-      })
+      }),
     );
   }
 
@@ -51,7 +51,7 @@ export class GHTrendScraper {
     const res = await fetch(`https://github.com/${owner}`);
     const dom = parse(await res.text());
     const ownersTwitterAccount = dom
-      .querySelector(".vcard-details a[href^=\"https://twitter.com\"]")
+      .querySelector('.vcard-details a[href^="https://twitter.com"]')
       ?.innerText.trim();
     return {
       ownersTwitterAccount,
@@ -67,7 +67,7 @@ export class GHTrendScraper {
 
   private static getStarCount(dom: HTMLElement) {
     const starCount = dom
-      .querySelector("a[href$=\"stargazers\"]")
+      .querySelector('a[href$="stargazers"]')
       ?.innerText.trim();
     return {
       starCount: starCount ? this.strToNumber(starCount) : 0,
@@ -75,7 +75,7 @@ export class GHTrendScraper {
   }
 
   private static getForkCount(dom: HTMLElement) {
-    const forkCount = dom.querySelector("a[href*=\"forks\"]")?.innerText.trim();
+    const forkCount = dom.querySelector('a[href*="forks"]')?.innerText.trim();
     return {
       forkCount: forkCount ? this.strToNumber(forkCount) : 0,
     };
@@ -90,7 +90,7 @@ export class GHTrendScraper {
 
   private static getLanguage(dom: HTMLElement) {
     const language = dom
-      .querySelector("[itemprop=\"programmingLanguage\"]")
+      .querySelector('[itemprop="programmingLanguage"]')
       ?.innerText.trim();
     return {
       language,

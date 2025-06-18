@@ -28,7 +28,7 @@ export const updateAllLanguagesTrends = async (): Promise<void> => {
 
 export const insertOrUpdateOwner = async (
   trend: GHTrend,
-  agent: BskyClient
+  agent: BskyClient,
 ): Promise<void> => {
   let bskyUser: ProfileView | null = null;
   if (trend.ownersTwitterAccount) {
@@ -64,7 +64,7 @@ export const postAllLanguagesTrends = async (): Promise<void> => {
   await updateTweetedFlag(doc, true);
   console.log(
     "🚀 ~ file: frontend.ts:53 ~ postFrontendTrends ~ trendData.todayStarCount:",
-    trendData.todayStarCount
+    trendData.todayStarCount,
   );
   if (trendData.todayStarCount > 500) {
     try {
@@ -72,7 +72,7 @@ export const postAllLanguagesTrends = async (): Promise<void> => {
       const summary = await openAIClient.summarize(trendData);
       console.log(
         "🚀 ~ file: allLanguages.ts:69 ~ postAllLanguagesTrends ~ summary:",
-        summary
+        summary,
       );
       await replyToPostPerText(summary, result, agent);
     } catch (e) {
