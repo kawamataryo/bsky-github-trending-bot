@@ -1,59 +1,58 @@
-import { OpenAI } from "@langchain/openai";
-import { loadSummarizationChain } from "langchain/chains";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { OpenAISummarizeAdapter } from "@tanstack/ai-openai";
 import { GHTrend } from "../types/types";
 
 export class OpenAIClient {
-  private model: OpenAI;
+  private openAIApiKey: string;
 
   constructor(openAIApiKey: string) {
-    this.model = new OpenAI({
-      openAIApiKey,
-      temperature: 0,
-      modelName: "gpt-4.1-nano",
-    });
-  }
-
-  async complete(prompt: string) {
-    return await this.model.call(prompt);
+    this.openAIApiKey = openAIApiKey;
   }
 
   async summarize(trend: GHTrend): Promise<string> {
-    const summarizationChain = loadSummarizationChain(this.model, {
-      type: "map_reduce",
-    });
-    const docs = await this.getWebpageTextDocs({
+    const readme = await this.getReadmeText({
       owner: trend.owner,
       repository: trend.repository,
     });
 
+    if (!readme) {
+      return "";
+    }
+
     try {
-      const res = await summarizationChain.invoke({
-        input_documents: docs,
+      const adapter = new OpenAISummarizeAdapter(
+        { apiKey: this.openAIApiKey },
+        "gpt-4.1-nano",
+      );
+      const result = await adapter.summarize({
+        model: "gpt-4.1-nano",
+        text: readme,
+        maxLength: 200,
+        style: "concise",
       });
-      return res.text;
+      return result.summary;
     } catch (e) {
       console.error(e);
       return "";
     }
   }
 
-  async getWebpageTextDocs({
+  private async getReadmeText({
     owner,
     repository,
-  }: Pick<GHTrend, "owner" | "repository">) {
-    const readmeBuffer = (
-      await (
-        await fetch(
-          `https://api.github.com/repos/${owner}/${repository}/readme`,
-        )
-      ).json()
-    ).content;
-    const readme = Buffer.from(readmeBuffer, "base64").toString("utf-8");
-    const splitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 2000,
-    });
-    const docs = await splitter.createDocuments([readme]);
-    return docs;
+  }: Pick<GHTrend, "owner" | "repository">): Promise<string> {
+    try {
+      const response = await fetch(
+        `https://api.github.com/repos/${owner}/${repository}/readme`,
+      );
+      if (!response.ok) {
+        return "";
+      }
+      const data = await response.json();
+      const readmeBuffer = data.content;
+      return Buffer.from(readmeBuffer, "base64").toString("utf-8");
+    } catch (e) {
+      console.error(e);
+      return "";
+    }
   }
 }

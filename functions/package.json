@@ -17,11 +17,11 @@
   "main": "lib/src/index.js",
   "dependencies": {
     "@atproto/api": "^0.12.7",
+    "@tanstack/ai-openai": "^0.3.0",
     "cheerio": "^1.0.0-rc.12",
     "dayjs": "^1.11.10",
     "firebase-admin": "^12.1.0",
     "firebase-functions": "^4.9.0",
-    "langchain": "^0.1.36",
     "node-fetch": "^3.3.2",
     "node-html-parser": "^6.1.13",
     "open-graph-scraper": "^6.5.1",
