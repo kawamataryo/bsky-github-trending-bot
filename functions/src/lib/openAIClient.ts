@@ -21,10 +21,10 @@ export class OpenAIClient {
     try {
       const adapter = new OpenAISummarizeAdapter(
         { apiKey: this.openAIApiKey },
-        "gpt-4.1-nano",
+        "gpt-5-nano",
       );
       const result = await adapter.summarize({
-        model: "gpt-4.1-nano",
+        model: "gpt-5-nano",
         text: readme,
         maxLength: 200,
         style: "concise",
