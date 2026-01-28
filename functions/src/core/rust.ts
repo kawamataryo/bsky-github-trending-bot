@@ -50,7 +50,7 @@ export const postRustTrends = async (): Promise<void> => {
     "🚀 ~ file: rust.ts:53 ~ postRustTrends ~ trendData.todayStarCount:",
     trendData.todayStarCount,
   );
-  if (trendData.todayStarCount > 100) {
+  if (trendData.todayStarCount > 200) {
     try {
       const openAIClient = new OpenAIClient(functions.config().openai.api_key);
       const summary = await openAIClient.summarize(trendData);
