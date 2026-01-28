@@ -7,7 +7,7 @@ import {
 } from "../lib/firestore.js";
 import { isUpdateTime, shuffle } from "../lib/utils.js";
 import { db } from "../lib/firebase.js";
-import { GHTrend } from "../types/types.js";
+import { GHTrend, Secrets } from "../types/types.js";
 import { postRepository, replyToPostPerText } from "../lib/bskyService.js";
 import * as functions from "firebase-functions";
 import { BskyClient } from "../lib/bskyClient.js";
@@ -38,15 +38,15 @@ export const insertOrUpdateOwner = async (
   await insertOwner(ownerCollectionRef, trend, bskyUser?.handle || "");
 };
 
-export const postAllLanguagesTrends = async (): Promise<void> => {
+export const postAllLanguagesTrends = async (secrets: Secrets): Promise<void> => {
   // update trends data at several times a day.
   if (isUpdateTime()) {
     await updateAllLanguagesTrends();
     console.info("Update all repositories collections");
   }
   const agent = await BskyClient.createAgent({
-    identifier: functions.config().bsky.id,
-    password: functions.config().bsky.password,
+    identifier: secrets.bsky.id,
+    password: secrets.bsky.password,
   });
 
   const snapshot = await getUntweetedTrend(trendCollectionRef);
@@ -66,7 +66,7 @@ export const postAllLanguagesTrends = async (): Promise<void> => {
   );
   if (trendData.todayStarCount > 200) {
     try {
-      const openAIClient = new OpenAIClient(functions.config().openai.api_key);
+      const openAIClient = new OpenAIClient(secrets.openai.api_key);
       const summary = await openAIClient.summarize(trendData);
       console.log(
         "🚀 ~ file: allLanguages.ts:69 ~ postAllLanguagesTrends ~ summary:",

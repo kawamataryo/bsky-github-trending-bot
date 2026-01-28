@@ -6,9 +6,8 @@ import {
 } from "../lib/firestore.js";
 import { isUpdateTime, shuffle } from "../lib/utils.js";
 import { db } from "../lib/firebase.js";
-import { GHTrend } from "../types/types.js";
+import { GHTrend, Secrets } from "../types/types.js";
 import { postRepository, replyToPostPerText } from "../lib/bskyService.js";
-import * as functions from "firebase-functions";
 import { BskyClient } from "../lib/bskyClient.js";
 import { OpenAIClient } from "../lib/openAIClient.js";
 const collectionRef = db.collection("v1").doc("trends").collection("rust");
@@ -18,11 +17,11 @@ export const updateRustTrends = async (): Promise<void> => {
   // filter today's star count > 50
   const trends = shuffle(rustTrends).filter(
     (t) => t.todayStarCount > 30,
-);
+  );
   await bulkInsertTrends(collectionRef, trends);
 };
 
-export const postRustTrends = async (): Promise<void> => {
+export const postRustTrends = async (secrets: Secrets): Promise<void> => {
   // update trends data at several times a day.
   if (isUpdateTime()) {
     await updateRustTrends();
@@ -38,8 +37,8 @@ export const postRustTrends = async (): Promise<void> => {
   const trendData = doc.data() as GHTrend;
 
   const agent = await BskyClient.createAgent({
-    identifier: functions.config().bsky.rust_id,
-    password: functions.config().bsky.rust_password,
+    identifier: secrets.bsky.rust_id,
+    password: secrets.bsky.rust_password,
   });
 
   const result = await postRepository(trendData, agent);
@@ -52,7 +51,7 @@ export const postRustTrends = async (): Promise<void> => {
   );
   if (trendData.todayStarCount > 200) {
     try {
-      const openAIClient = new OpenAIClient(functions.config().openai.api_key);
+      const openAIClient = new OpenAIClient(secrets.openai.api_key);
       const summary = await openAIClient.summarize(trendData);
       await replyToPostPerText(summary, result, agent);
     } catch (e) {

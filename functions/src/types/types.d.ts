@@ -17,3 +17,17 @@ type OpenGraph = {
   title: string;
   uint8Array: Uint8Array;
 };
+
+type Secrets = {
+  openai: {
+    api_key: string;
+  };
+  bsky: {
+    frontend_id: string;
+    frontend_password: string;
+    id: string;
+    password: string;
+    rust_id: string;
+    rust_password: string;
+  };
+};
