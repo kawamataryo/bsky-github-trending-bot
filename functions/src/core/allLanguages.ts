@@ -1,20 +1,18 @@
-import { GHTrendScraper } from "../lib/ghTrendScraper";
+import { GHTrendScraper } from "../lib/ghTrendScraper.js";
 import {
   bulkInsertTrends,
   getUntweetedTrend,
   insertOwner,
   updateTweetedFlag,
-} from "../lib/firestore";
-import { isUpdateTime, shuffle } from "../lib/utils";
-import * as admin from "firebase-admin";
-import { GHTrend } from "../types/types";
-import { postRepository, replyToPostPerText } from "../lib/bskyService";
+} from "../lib/firestore.js";
+import { isUpdateTime, shuffle } from "../lib/utils.js";
+import { db } from "../lib/firebase.js";
+import { GHTrend } from "../types/types.js";
+import { postRepository, replyToPostPerText } from "../lib/bskyService.js";
 import * as functions from "firebase-functions";
-import { BskyClient } from "../lib/bskyClient";
-import { ProfileView } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
-import { OpenAIClient } from "../lib/openAIClient";
-
-const db = admin.firestore();
+import { BskyClient } from "../lib/bskyClient.js";
+import { AppBskyActorDefs } from "@atproto/api";
+import { OpenAIClient } from "../lib/openAIClient.js";
 const trendCollectionRef = db.collection("v1").doc("trends").collection("all");
 const ownerCollectionRef = db
   .collection("v1")
@@ -30,7 +28,7 @@ export const insertOrUpdateOwner = async (
   trend: GHTrend,
   agent: BskyClient,
 ): Promise<void> => {
-  let bskyUser: ProfileView | null = null;
+  let bskyUser: AppBskyActorDefs.ProfileView | null = null;
   if (trend.ownersTwitterAccount) {
     bskyUser = await agent.searchUser({
       term: trend.ownersTwitterAccount.replace("@", ""),

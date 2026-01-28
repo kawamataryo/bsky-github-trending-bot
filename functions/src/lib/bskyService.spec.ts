@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { getStarIncreaseLabel, splitStringForThreadText } from "./bskyService";
+import {
+  getStarIncreaseLabel,
+  splitStringForThreadText,
+} from "./bskyService.js";
 
 describe("getStarIncreaseLabel", () => {
   it.each([

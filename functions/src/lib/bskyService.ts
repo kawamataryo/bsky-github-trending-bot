@@ -1,7 +1,7 @@
-import { GHTrend } from "../types/types";
-import { truncateText } from "./utils";
-import { BskyClient } from "./bskyClient";
-import { getOgImageFromUrl } from "./getOgImageFromUrl";
+import { GHTrend } from "../types/types.js";
+import { truncateText } from "./utils.js";
+import { BskyClient } from "./bskyClient.js";
+import { getOgImageFromUrl } from "./getOgImageFromUrl.js";
 import { ComAtprotoRepoStrongRef } from "@atproto/api";
 
 export const postRepository = async (trendData: GHTrend, agent: BskyClient) => {

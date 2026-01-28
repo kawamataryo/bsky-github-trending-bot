@@ -1,5 +1,5 @@
 import { parse, HTMLElement } from "node-html-parser";
-import { GHTrend } from "../types/types";
+import { GHTrend } from "../types/types.js";
 
 export class GHTrendScraper {
   static async scraping(params = ""): Promise<GHTrend[]> {

@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
-import { postAllLanguagesTrends } from "../core/allLanguages";
-import { postFrontendTrends } from "../core/frontend";
+import { postAllLanguagesTrends } from "../core/allLanguages.js";
+import { postFrontendTrends } from "../core/frontend.js";
 
 const runtimeOpts = {
   timeoutSeconds: 360,

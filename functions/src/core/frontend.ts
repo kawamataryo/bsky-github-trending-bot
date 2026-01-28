@@ -1,18 +1,16 @@
-import { GHTrendScraper } from "../lib/ghTrendScraper";
+import { GHTrendScraper } from "../lib/ghTrendScraper.js";
 import {
   bulkInsertTrends,
   getUntweetedTrend,
   updateTweetedFlag,
-} from "../lib/firestore";
-import { isUpdateTime, shuffle } from "../lib/utils";
-import * as admin from "firebase-admin";
-import { GHTrend } from "../types/types";
-import { postRepository, replyToPostPerText } from "../lib/bskyService";
+} from "../lib/firestore.js";
+import { isUpdateTime, shuffle } from "../lib/utils.js";
+import { db } from "../lib/firebase.js";
+import { GHTrend } from "../types/types.js";
+import { postRepository, replyToPostPerText } from "../lib/bskyService.js";
 import * as functions from "firebase-functions";
-import { BskyClient } from "../lib/bskyClient";
-import { OpenAIClient } from "../lib/openAIClient";
-
-const db = admin.firestore();
+import { BskyClient } from "../lib/bskyClient.js";
+import { OpenAIClient } from "../lib/openAIClient.js";
 const collectionRef = db.collection("v1").doc("trends").collection("frontend");
 
 export const updateFrontendTrends = async (): Promise<void> => {

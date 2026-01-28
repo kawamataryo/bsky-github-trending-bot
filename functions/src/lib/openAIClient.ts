@@ -1,11 +1,12 @@
-import { OpenAISummarizeAdapter } from "@tanstack/ai-openai";
-import { GHTrend } from "../types/types";
+import { generateText } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
+import { GHTrend } from "../types/types.js";
 
 export class OpenAIClient {
-  private openAIApiKey: string;
+  private openai: ReturnType<typeof createOpenAI>;
 
   constructor(openAIApiKey: string) {
-    this.openAIApiKey = openAIApiKey;
+    this.openai = createOpenAI({ apiKey: openAIApiKey });
   }
 
   async summarize(trend: GHTrend): Promise<string> {
@@ -19,20 +20,23 @@ export class OpenAIClient {
     }
 
     try {
-      const adapter = new OpenAISummarizeAdapter(
-        { apiKey: this.openAIApiKey },
-        "gpt-5-nano",
-      );
-      const result = await adapter.summarize({
-        model: "gpt-5-nano",
-        text: readme,
-        maxLength: 200,
-        style: "concise",
+      console.log("Calling OpenAI API...");
+      const { text } = await generateText({
+        model: this.openai("gpt-5-nano"),
+        system:
+          "You are a professional summarizer. Provide a very concise summary in 1-2 sentences. Keep the summary under 200 tokens.",
+        prompt: readme,
+        providerOptions: {
+          openai: {
+            reasoningEffort: "minimal",
+          },
+        },
       });
-      return result.summary;
+      console.log("API Result:", JSON.stringify(text, null, 2));
+      return text;
     } catch (e) {
-      console.error(e);
-      return "";
+      console.error("OpenAI Error:", e);
+      throw e;
     }
   }
 

@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { GHTrend } from "../types/types";
+import { GHTrend } from "../types/types.js";
 
 const getExcludedInsertData = async (
   collectionRef: FirebaseFirestore.CollectionReference,

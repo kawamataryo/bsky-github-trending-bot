@@ -1,10 +1,10 @@
 import sharp from "sharp";
-import { OpenGraph } from "../types/types";
+import { OpenGraph } from "../types/types.js";
 import ogs from "open-graph-scraper";
 
 export const getOgImageFromUrl = async (url: string): Promise<OpenGraph> => {
   const options = { url: url };
-  const { result } = await ogs(options);
+  const { result } = await (ogs as unknown as typeof ogs.default)(options);
   const res = await fetch(result.ogImage?.at(0)?.url || "");
 
   // minify image size because of bsky.social's image size limit

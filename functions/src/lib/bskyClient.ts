@@ -1,5 +1,4 @@
 import { AppBskyFeedPost, AppBskyRichtextFacet, BskyAgent } from "@atproto/api";
-import { ReplyRef } from "@atproto/api/dist/client/types/app/bsky/feed/post";
 
 export class BskyClient {
   private service = "https://bsky.social";
@@ -29,7 +28,7 @@ export class BskyClient {
     text: string;
     facets?: AppBskyRichtextFacet.Main[];
     embed?: AppBskyFeedPost.Record["embed"];
-    reply?: ReplyRef;
+    reply?: AppBskyFeedPost.ReplyRef;
   }): Promise<{ cid: string; uri: string }> {
     const postParams: AppBskyFeedPost.Record = {
       $type: "app.bsky.feed.post",

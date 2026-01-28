@@ -1,5 +1,5 @@
 import { test, expect, describe, vi, afterEach } from "vitest";
-import { OpenAIClient } from "./openAIClient";
+import { OpenAIClient } from "./openAIClient.js";
 
 describe("openAIClient", () => {
   afterEach(() => {
