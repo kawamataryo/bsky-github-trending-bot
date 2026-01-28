@@ -1,13 +1,16 @@
-import * as functions from "firebase-functions";
+import * as functions from "firebase-functions/v1";
 import {
   postAllLanguagesTrends,
   updateAllLanguagesTrends,
 } from "../core/allLanguages.js";
 import { postFrontendTrends, updateFrontendTrends } from "../core/frontend.js";
+import { postRustTrends, updateRustTrends } from "../core/rust.js";
+import { SECRETS } from "../lib/firebase.js";
 
 const runtimeOpts = {
   timeoutSeconds: 180,
   memory: "512MB" as const,
+  secrets: [SECRETS],
 };
 
 export const scrappingGitHubTrends = functions
@@ -27,6 +30,7 @@ export const scrappingGitHubTrends = functions
     await Promise.all([
       updateAllLanguagesTrends().catch((e) => errorHandler(e, "All languages")),
       updateFrontendTrends().catch((e) => errorHandler(e, "Frontend")),
+      updateRustTrends().catch((e) => errorHandler(e, "Rust")),
     ]);
 
     if (!hasError) {
@@ -49,10 +53,14 @@ export const postGitHubTrends = functions
       errorMessages.push(errorMessage);
     };
 
+    const secrets = SECRETS.value();
     // NOTE: Run in series to prevent stop in case of rejects
     await Promise.all([
-      postAllLanguagesTrends().catch((e) => errorHandler(e, "All languages")),
-      postFrontendTrends().catch((e) => errorHandler(e, "Frontend")),
+      postAllLanguagesTrends(secrets).catch((e) =>
+        errorHandler(e, "All languages"),
+      ),
+      postFrontendTrends(secrets).catch((e) => errorHandler(e, "Frontend")),
+      postRustTrends(secrets).catch((e) => errorHandler(e, "Rust")),
     ]);
 
     if (!hasError) {

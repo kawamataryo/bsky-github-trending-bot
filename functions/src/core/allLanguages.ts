@@ -9,7 +9,6 @@ import { isUpdateTime, shuffle } from "../lib/utils.js";
 import { db } from "../lib/firebase.js";
 import { GHTrend, Secrets } from "../types/types.js";
 import { postRepository, replyToPostPerText } from "../lib/bskyService.js";
-import * as functions from "firebase-functions";
 import { BskyClient } from "../lib/bskyClient.js";
 import { AppBskyActorDefs } from "@atproto/api";
 import { OpenAIClient } from "../lib/openAIClient.js";
@@ -38,7 +37,9 @@ export const insertOrUpdateOwner = async (
   await insertOwner(ownerCollectionRef, trend, bskyUser?.handle || "");
 };
 
-export const postAllLanguagesTrends = async (secrets: Secrets): Promise<void> => {
+export const postAllLanguagesTrends = async (
+  secrets: Secrets,
+): Promise<void> => {
   // update trends data at several times a day.
   if (isUpdateTime()) {
     await updateAllLanguagesTrends();

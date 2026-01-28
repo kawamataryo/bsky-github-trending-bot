@@ -8,7 +8,6 @@ import { isUpdateTime, shuffle } from "../lib/utils.js";
 import { db } from "../lib/firebase.js";
 import { GHTrend, Secrets } from "../types/types.js";
 import { postRepository, replyToPostPerText } from "../lib/bskyService.js";
-import * as functions from "firebase-functions";
 import { BskyClient } from "../lib/bskyClient.js";
 import { OpenAIClient } from "../lib/openAIClient.js";
 const collectionRef = db.collection("v1").doc("trends").collection("frontend");

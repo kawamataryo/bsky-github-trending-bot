@@ -15,9 +15,7 @@ const collectionRef = db.collection("v1").doc("trends").collection("rust");
 export const updateRustTrends = async (): Promise<void> => {
   const rustTrends = await GHTrendScraper.scraping("/rust");
   // filter today's star count > 50
-  const trends = shuffle(rustTrends).filter(
-    (t) => t.todayStarCount > 30,
-  );
+  const trends = shuffle(rustTrends).filter((t) => t.todayStarCount > 30);
   await bulkInsertTrends(collectionRef, trends);
 };
 
