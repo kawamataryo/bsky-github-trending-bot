@@ -64,7 +64,7 @@ export const postAllLanguagesTrends = async (): Promise<void> => {
     "🚀 ~ file: frontend.ts:53 ~ postFrontendTrends ~ trendData.todayStarCount:",
     trendData.todayStarCount,
   );
-  if (trendData.todayStarCount > 500) {
+  if (trendData.todayStarCount > 100) {
     try {
       const openAIClient = new OpenAIClient(functions.config().openai.api_key);
       const summary = await openAIClient.summarize(trendData);
